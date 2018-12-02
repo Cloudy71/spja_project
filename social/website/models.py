@@ -9,10 +9,11 @@ class SocialUser(User):
 class Post(models.Model):
     author = models.ForeignKey(SocialUser, on_delete=models.CASCADE)
     content = models.CharField(max_length=340)
-    date = models.TimeField()
+    date = models.DateTimeField(auto_now=True)
 
 class Comment(models.Model):
     author = models.ForeignKey(SocialUser, on_delete=models.CASCADE)
     content = models.CharField(max_length=140)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=True)
     

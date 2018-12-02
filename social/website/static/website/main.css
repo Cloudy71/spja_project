@@ -1,0 +1,22 @@
+#sitename {
+    font-size: 25px;
+}
+
+
+#siteheader {
+    background-color: beige;
+    display: inline-block;
+}
+.navbar {
+    background-color: red;
+}
+
+.navbar a {
+    text-decoration: none;
+}
+
+.container {
+    
+    margin: 0 auto;
+    max-width: 50em;
+}

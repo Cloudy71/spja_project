@@ -1,6 +1,11 @@
-from django.http import HttpResponse
-
+from django.shortcuts import render
+from .models import Post
 # Create your views here.
 
 def index(request):
-    return HttpResponse("Testing!")
+
+    context = {
+        "posts": Post.objects.select_related("author").order_by("date")
+    }
+    print(context)
+    return render(request, "website/index.html", context)
