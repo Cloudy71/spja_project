@@ -2,21 +2,25 @@
     font-size: 25px;
 }
 
-
 #siteheader {
-    background-color: beige;
-    display: inline-block;
-}
-.navbar {
-    background-color: red;
+    background-color: lightblue;
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
 }
 
-.navbar a {
+
+#siteheader a {
+    margin: 0 1em;
     text-decoration: none;
+    font-family: sans-serif;
 }
 
 .container {
-    
     margin: 0 auto;
     max-width: 50em;
+}
+
+.profile {
+    margin-bottom: 2em;
 }

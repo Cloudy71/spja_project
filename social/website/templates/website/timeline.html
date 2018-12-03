@@ -1,0 +1,15 @@
+{% extends 'website/index.html' %}
+
+
+
+{% block content %}
+
+    {% block profile %}
+    {% endblock %}
+
+    {% for post in posts %}
+        <a href="/profile/{{post.author}}">{{ post.author }}</a>
+        <p>{{ post.content }}</p>
+        <hr/>
+    {% endfor %}
+{% endblock %}

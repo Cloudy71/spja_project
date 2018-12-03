@@ -11,25 +11,15 @@
 <body>
 <div class="container">
     <div id="siteheader">
-         <div id="sitename">SOCIAL WEBSITE</div>
-        <div class="navbar">
-           
-            <a href="#">Awaed</a>
-            <a href="#">Awaed</a>
-            <a href="#">Awaedo</a>
-            <a href="#">Awaed</a>
-            
-        </div>
+        <a href="#">Login</a>
+        <a href="#">Sign in</a>
+        <a href="#">Profile</a>
+        <a href="#"> Settings</a>
+        <a href="/">Timeline</a>
     </div>
-    <br/>
     <div class="content">
-    {% if posts %}
-        {% for post in posts %}
-            <h2>{{ post.author }}</h2>
-            {{ post.content }}
-            <hr/>
-        {% endfor %}
-    {% endif %}
+        {% block content %}
+        {% endblock %}
     </div>
 </div>
 </body>
