@@ -16,3 +16,6 @@ def profile(request, login):
         "posts": Post.objects.filter(author__username=login).order_by("-date")
     }
     return render(request, "website/profile.html", context)
+
+def sign_in(request):
+    pass

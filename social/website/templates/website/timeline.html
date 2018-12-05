@@ -1,15 +1,15 @@
 {% extends 'website/index.html' %}
 
-
-
 {% block content %}
 
     {% block profile %}
     {% endblock %}
 
     {% for post in posts %}
-        <a href="/profile/{{post.author}}">{{ post.author }}</a>
+    <div class="post">
+        <a class="whole_name" href="/profile/{{post.author}}">{{ post.author.get_full_name }}</a>
         <p>{{ post.content }}</p>
         <hr/>
+    </div>
     {% endfor %}
 {% endblock %}

@@ -24,3 +24,24 @@
 .profile {
     margin-bottom: 2em;
 }
+
+.whole_name {
+    text-decoration: none;
+    color: black;
+    font-size: 1.2em;
+}
+
+.whole_name:hover {
+    text-decoration: underline;
+}
+
+.post {
+}
+
+.post:hover {
+    background-color: #FBFBFB;
+}
+
+.post hr {
+    margin: 0 auto;
+}
