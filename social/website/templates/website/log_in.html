@@ -1,12 +1,12 @@
 {% extends 'website/index.html' %}
 
 {% block content %}
-<form action="/signin" method="POST" class="form">
+<form action="/login" method="POST" class="form">
     <table>
     {% csrf_token %}
     {{ form }}
     </table>
-<input type="submit" value="Sign in" />
+<input type="submit" value="Log in" />
 </form>
 
 {% endblock %}

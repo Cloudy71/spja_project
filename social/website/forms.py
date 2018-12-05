@@ -5,4 +5,9 @@ class UserForm(forms.Form):
     firstName = forms.CharField(label="First name", max_length=30)
     lastName = forms.CharField(label="Last name", max_length=30)
     password = forms.CharField(label="Password", max_length=30, min_length=8)
-    password = forms.CharField(label="Repeat password", max_length=30, min_length=8)
+    repeated_password = forms.CharField(label="Repeat password", max_length=30, min_length=8)
+    description = forms.CharField(widget=forms.Textarea)
+
+class LoginForm(forms.Form):
+    login = forms.CharField(label="Login", max_length=30)
+    password = forms.CharField(label="Password", max_length=30, min_length=8)

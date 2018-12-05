@@ -45,3 +45,7 @@
 .post hr {
     margin: 0 auto;
 }
+
+.form {
+    display: block;
+}
