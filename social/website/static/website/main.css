@@ -1,3 +1,8 @@
+body {
+    background-color: #EEEEEE;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
 #sitename {
     font-size: 25px;
 }
@@ -25,10 +30,14 @@
     margin-bottom: 2em;
 }
 
-.whole_name {
+.post .whole_name {
     text-decoration: none;
     color: black;
     font-size: 1.2em;
+}
+
+.post .date {
+    font-size: 12px;
 }
 
 .whole_name:hover {
@@ -36,6 +45,35 @@
 }
 
 .post {
+    position: relative;
+    margin-top: 8px;
+    border: 1px solid #BBBBBB;
+    padding: 8px;
+    background-color: white;
+}
+
+.post .info {
+    display: inline-block;
+}
+
+.post .profile_picture {
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+    border: 1px solid #BBBBBB;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 4px;
+}
+
+.post .messages {
+    position: absolute;
+    top: calc(100% - 8px);
+    left: 8px;
+    border: 1px solid #BBBBBB;
+    background-color: white;
+    width: calc(100% - 16px);
+    height: 32px;
 }
 
 .post:hover {
