@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
-
+from django.http import HttpResponse
 from .models import Profile, Post
-
+from django.contrib.auth.decorators import login_required
 from .forms import UserForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -47,9 +47,16 @@ def sign_in(request):
             
             user = User.objects.create_user(
                 username = form.cleaned_data["login"],
-                last_name = form.cleaned_data["firstName"],
-                first_name = form.cleaned_data["lastName"],
+                last_name = form.cleaned_data["lastName"],
+                first_name = form.cleaned_data["firstName"],
                 password = form.cleaned_data["password"]
             )
             Profile.objects.create(description = form.cleaned_data["description"], user=user)
     return render(request, "website/sign_in.html", {"form": UserForm()})
+
+@login_required
+def post(request):
+    if request.method == "POST":
+        text = request.POST["text"]
+        Post.objects.create(author=get_object_or_404(Profile, user=request.user), content=text)
+    return redirect("/")

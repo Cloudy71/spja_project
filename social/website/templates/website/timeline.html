@@ -7,7 +7,8 @@
     {% endblock %}
 
     {% for post in posts %}
-        <div class="post">
+        <div class="post" postid={{post.id}}>
+            <div class="post-content">
             <div class="profile_picture"></div>
             <div class="info">
                 <a class="whole_name"
@@ -15,9 +16,10 @@
                 <a class="date">{{ post.date }}</a>
             </div>
             <p>{{ post.content }}</p>
+        </div>
             <div class="messages">
                 <img src="{% static "images/thumb_up_n.png" %}" width="20"> 0
-                <img src="{% static "images/thumb_down_n.png" %}" width="20"> 0
+                <img src="{% static "images/thumb_down_n.png" %}" width="20""> 0
             </div>
         </div>
     {% endfor %}

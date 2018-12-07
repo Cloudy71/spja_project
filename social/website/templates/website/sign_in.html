@@ -2,8 +2,8 @@
 
 {% block content %}
 <form action="/signin" method="POST" class="form">
-    <table>
     {% csrf_token %}
+    <table>
     {{ form }}
     </table>
 <input type="submit" value="Sign in" />

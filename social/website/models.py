@@ -19,16 +19,16 @@ class Post(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.CharField(max_length=340)
     date = models.DateTimeField(auto_now=True)
-    reactions = models.ManyToManyField(Reaction)
-
-    def get_thumbs(self):
-        thumbs = [0, 0]
-        for reaction in self.reactions.all():
-            thumbs[reaction.value] += 1
-            pass
-
-        return thumbs
-        pass
+    #reactions = models.ManyToManyField(Reaction)
+    #
+    #def get_thumbs(self):
+    #    thumbs = [0, 0]
+    #    for reaction in self.reactions.all():
+    #        thumbs[reaction.value] += 1
+    #        pass
+    #
+    #    return thumbs
+    #    pass
 
 
 class Comment(models.Model):
