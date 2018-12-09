@@ -32,7 +32,7 @@ body {
     text-decoration: none;
     border-radius: 3px;
     font-size: 16px;
-    }
+}
 
 #siteheader a {
     padding: 0 .5em;
@@ -79,12 +79,11 @@ body {
     position: relative;
     margin-top: 8px;
     border: 1px solid rgb(214, 214, 214);
-
     background-color: white;
     border-radius: 5px;
 }
 
-.post-content {
+.post .content {
     padding: .5em;
 }
 
@@ -106,7 +105,7 @@ body {
     padding-top: 6px;
     padding-left: .5em;
     border-top: 1px solid #BBBBBB;
-    
+
     margin: 0 auto;
     height: 32px;
 }
@@ -127,7 +126,7 @@ body {
     margin: 1em auto;
     padding: 0;
     display: flex;
-    align-content: stretch; 
+    align-content: stretch;
 }
 
 .post-form textarea {
@@ -149,4 +148,38 @@ body {
     border: none;
     border-radius: 0 3px 3px 0;
     padding: 12px 10px;
+}
+
+.post .button {
+    border-radius: 5px;
+    background-color: rgb(222, 222, 222);
+    display: inline-block;
+    cursor: pointer;
+    padding: 2px;
+    box-sizing: border-box;
+    height: 28px;
+    vertical-align: top;
+}
+
+.post .button img {
+    margin-top: 2px;
+}
+
+.post .button:hover {
+    background-color: rgb(200, 200, 200);
+}
+
+.post .menu {
+    float: right;
+    cursor: pointer;
+    height: 28px;
+    padding: 4px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.post .menu:hover {
+    background-color: rgb(200, 200, 200);
+    display: inline-block;
+
 }

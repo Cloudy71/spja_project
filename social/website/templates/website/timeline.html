@@ -1,5 +1,6 @@
-{% extends 'website/index.html' %}
+{% extends 'website/social.html' %}
 {% load static %}
+{% load timeline %}
 
 {% block content %}
 
@@ -7,19 +8,24 @@
     {% endblock %}
 
     {% for post in posts %}
-        <div class="post" postid={{post.id}}>
-            <div class="post-content">
-            <div class="profile_picture"></div>
-            <div class="info">
-                <a class="whole_name"
-                   href="/profile/{{ post.author.user.username }}">{{ post.author.user.get_full_name }}</a><br/>
-                <a class="date">{{ post.date }}</a>
+        <div class="post" postid={{ post.id }}>
+            <div class="content">
+                <div class="profile_picture"></div>
+                <div class="info">
+                    <a class="whole_name"
+                       href="/profile/{{ post.author.user.username }}">{{ post.author.user.get_full_name }}</a><br/>
+                    <a class="date">{{ post.date }}</a>
+                </div>
+                <div class="menu"><img src="{% static "images/menu.png" %}" width="20"></div>
+                <p>{{ post.content }}</p>
             </div>
-            <p>{{ post.content }}</p>
-        </div>
             <div class="messages">
-                <img src="{% static "images/thumb_up_n.png" %}" width="20"> 0
-                <img src="{% static "images/thumb_down_n.png" %}" width="20""> 0
+                <div class="button"><img src="{% static "images/thumb_up_n.png" %}" width="20"> {{ post.get_thumbs_up }}
+                </div>
+                <div class="button"><img src="{% static "images/thumb_down_n.png" %}"
+                                         width="20"> {{ post.get_thumbs_down }}</div>
+                <div class="button"><img src="{% static "images/messages.png" %}"
+                                         width="20"> {{ post.get_message_count }}</div>
             </div>
         </div>
     {% endfor %}

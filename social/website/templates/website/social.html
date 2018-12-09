@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Social network</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "website/main.css" %}"/>
+    <script src="{% static 'website/main.js' %}"></script>
+</head>
+<body>
+<div class="container">
+    <div id="siteheader">
+        <a href="/profile/{{ logged_user.username }}">Profile</a>
+        <a href="#">Settings</a>
+        <button onclick="displayPostForm()">New post</button>
+        <a href="/">Timeline</a>
+        <a href="/logout">Log out</a>
+    </div>
+    <div class="content">
+        <form action="/post" method="POST" class="post-form" id="post-form" style="display: none;">
+            {% csrf_token %}
+            <textarea id="post-area" name="text"></textarea>
+            <input type="submit" class="post-form-button" value="Send">
+        </form>
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+</body>
+</html>

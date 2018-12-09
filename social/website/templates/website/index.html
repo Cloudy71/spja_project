@@ -2,39 +2,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>Social network</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static "website/main.css" %}"></link>
-    <script src="{%static 'website/main.js'%}"></script>
+    <link rel="stylesheet" href="{% static "website/index.css" %}"/>
+    <script src="{% static "website/jquery-3.3.1.min.js" %}"></script>
 </head>
 <body>
-<div class="container">
-    <div id="siteheader">
-        {% if logged_user %}
-            <a href="/logout">Log out</a>
-            <a href="/profile/{{logged_user.username}}">Profile</a>
-            <a href="#">Settings</a>
-            <a href="/">Timeline</a>
-            <button onclick="displayPostForm()">New post</button>
-        {% else %}
-        <a href="/login">Login</a>
-        <a href="/signin">Sign in</a>
-        <a href="/">Timeline</a>
-        {% endif %}   
-    </div>
-    <div class="content">
-    {% if logged_user %}
-        <form action="/post" method="POST" class="post-form" id="post-form" style="display: none;">
-            {% csrf_token %}
-            <textarea id="post-area" name="text"></textarea>
-            <input type="submit" class="post-form-button" value="Send">
-        </form>
-    {% endif %}
-    {% block content %}
-    {% endblock %}
-    </div>
-</div>
+<div id="container"></div>
 </body>
+<script src="{% static "website/index.js" %}"></script>
 </html>
