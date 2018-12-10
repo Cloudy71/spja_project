@@ -183,3 +183,13 @@ body {
     display: inline-block;
 
 }
+
+.post .date_button {
+    font-size: 12px;
+    color: #408dff;
+    cursor: pointer;
+}
+
+.post .date_button:hover {
+    text-decoration: underline;
+}

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from website.lib.const import Visibility, Thumb
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -13,6 +15,7 @@ class Post(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.CharField(max_length=340)
     date = models.DateTimeField(auto_now=True)
+    visibility = models.PositiveSmallIntegerField(default=Visibility.PUBLIC)  # 0: public, 1: friends, 2: myself; TODO: show posts only by visibility attribute.
 
     def get_thumbs_up(self):
         return len(Reaction.objects.all().filter(post=self, value=0))
@@ -37,5 +40,11 @@ class Post(models.Model):
 class Reaction(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    value = models.PositiveSmallIntegerField(default=0)
+    value = models.PositiveSmallIntegerField(default=Thumb.UP)
+    date = models.DateTimeField(auto_now=True)
+
+
+class Follow(models.Model):
+    follower = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="follower")
+    following = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="following")
     date = models.DateTimeField(auto_now=True)

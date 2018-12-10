@@ -15,6 +15,9 @@
                     <a class="whole_name"
                        href="/profile/{{ post.author.user.username }}">{{ post.author.user.get_full_name }}</a><br/>
                     <a class="date">{{ post.date }}</a>
+                    {% if post.author|followed_by:logged_user == False %}
+                        - <a class="date_button">follow</a>
+                    {% endif %}
                 </div>
                 <div class="menu"><img src="{% static "images/menu.png" %}" width="20"></div>
                 <p>{{ post.content }}</p>

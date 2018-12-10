@@ -17,7 +17,7 @@ def index(request):
     else:
         context = {
             "posts": Post.objects.select_related("author").order_by("-date")[:10],
-            "logged_user": request.user if request.user.is_authenticated else None,
+            "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
         }
         rndr = "website/timeline.html"
 
@@ -31,7 +31,7 @@ def profile(request, login):
     context = {
         "profile": get_object_or_404(Profile, user__username=login),
         "posts": Post.objects.filter(author__user__username=login).order_by("-date")[:10],
-        "logged_user": request.user if request.user.is_authenticated else None,
+        "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
     }
     return render(request, "website/profile.html", context)
 
