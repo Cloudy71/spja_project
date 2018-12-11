@@ -2,11 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from website.lib.const import Visibility, Thumb
+from website.lib.model_utils import get_profile_by_user
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    description = models.CharField(max_length=140)
+    description = models.CharField(max_length=140, default="")
 
 
 class Post(models.Model):
@@ -24,12 +25,10 @@ class Post(models.Model):
         return len(Reaction.objects.all().filter(post=self, value=1))
 
     def get_thumb_value(self, user):
-        if isinstance(user, User):
-            profile = Profile.objects.all().filter(user=user).first()
-        elif isinstance(user, Profile):
-            profile = user
-        else:
-            raise ValueError("user parameter must be User type or Profile type")
+        profile = get_profile_by_user(user)
+        if profile is None:
+            raise ValueError("User must be user type or profile type.")
+
         reaction = Reaction.objects.all().filter(post=self, author=profile)[::1]
         return -1 if len(reaction) == 0 else reaction.filter().value
 

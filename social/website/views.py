@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
 from django.http import HttpResponse
-from .models import Profile, Post
+
+from website.lib.model_utils import is_user_followed_by, get_profile_by_user
+from .models import Profile, Post, Follow
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
@@ -79,3 +81,28 @@ def post(request):
         text = request.POST["text"]
         Post.objects.create(author=get_object_or_404(Profile, user=request.user), content=text)
     return redirect("/")
+
+
+def follow(request, login):
+    if len(login) == 0:
+        return HttpResponse("0")
+    login_user = User.objects.get(username=login)
+    if not is_user_followed_by(login_user, request.user):
+        Follow.objects.create(follower=get_profile_by_user(request.user), following=get_profile_by_user(login_user))
+        return HttpResponse("1")
+        pass
+    return HttpResponse("0")
+    pass
+
+
+def stop_follow(request, login):
+    if len(login) == 0:
+        return HttpResponse("0")
+    login_user = User.objects.get(username=login)
+    if is_user_followed_by(login_user, request.user):
+        Follow.objects.get(follower=get_profile_by_user(request.user),
+                           following=get_profile_by_user(login_user)).delete()
+        return HttpResponse("1")
+        pass
+    return HttpResponse("0")
+    pass

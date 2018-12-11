@@ -1,7 +1,8 @@
-from django import template
-from django.core.exceptions import ObjectDoesNotExist
+import logging
 
-from ..models import Follow
+from django import template
+
+from website.lib.model_utils import is_user_followed_by
 
 register = template.Library()
 
@@ -14,9 +15,5 @@ def get_thumb_value(value, user):
 
 @register.filter(name="followed_by")
 def is_followed_by(user1, user2):
-    try:
-        Follow.objects.get(follower=user2, following=user1)
-        return True
-    except ObjectDoesNotExist:
-        return False
+    return is_user_followed_by(user1, user2)
     pass

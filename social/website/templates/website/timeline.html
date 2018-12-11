@@ -16,7 +16,11 @@
                        href="/profile/{{ post.author.user.username }}">{{ post.author.user.get_full_name }}</a><br/>
                     <a class="date">{{ post.date }}</a>
                     {% if post.author|followed_by:logged_user == False %}
-                        - <a class="date_button">follow</a>
+                        <a class="date_button blue" name="flw_{{ post.author.user.username }}"
+                           onclick="followUser('{{ post.author.user.username }}');">Follow</a>
+                    {% else %}
+                        <a class="date_button gray" name="flw_{{ post.author.user.username }}"
+                           onclick="stopFollowingUser('{{ post.author.user.username }}');">Stop following</a>
                     {% endif %}
                 </div>
                 <div class="menu"><img src="{% static "images/menu.png" %}" width="20"></div>
