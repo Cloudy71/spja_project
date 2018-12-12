@@ -11,19 +11,26 @@
     <script src="{% static "website/jquery-3.3.1.min.js" %}"></script>
 </head>
 <body>
-<div class="container">
-    <div id="siteheader">
-        <a href="/profile/{{ logged_user.user.username }}">Profile</a>
-        <a href="#">Settings</a>
-        <button onclick="displayPostForm()">New post</button>
-        <a href="/">Timeline</a>
-        <a href="/logout">Log out</a>
+<div id="siteheader">
+    <div id="content">
+        <button href="/profile/{{ logged_user.user.username }}">Profile</button>
+        <button href="#">Settings</button>
+        <button class="special" onclick="displayPostForm()">New post</button>
+        <button href="/">Timeline</button>
+        <button href="/logout">Log out</button>
+
+        <div class="absolute right" style="display:inline-block;">
+            {{ logged_user.user.username }}
+            <div class="profile_picture"></div>
+        </div>
     </div>
+</div>
+<div class="container">
     <div class="content">
-        <form action="/post" method="POST" class="post-form" id="post-form" style="display: none;">
+        <form action="/post" method="POST" id="post-form" style="display: none;">
             {% csrf_token %}
             <textarea id="post-area" name="text"></textarea>
-            <input type="submit" class="post-form-button" value="Send">
+            <input type="submit" class="button" value="Send">
         </form>
         {% block content %}
         {% endblock %}

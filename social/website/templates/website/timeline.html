@@ -20,7 +20,7 @@
                            onclick="followUser('{{ post.author.user.username }}');">Follow</a>
                     {% else %}
                         <a class="date_button gray" name="flw_{{ post.author.user.username }}"
-                           onclick="stopFollowingUser('{{ post.author.user.username }}');">Stop following</a>
+                           onclick="UnfollowUser('{{ post.author.user.username }}');">Unfollow</a>
                     {% endif %}
                 </div>
                 <div class="menu"><img src="{% static "images/menu.png" %}" width="20"></div>

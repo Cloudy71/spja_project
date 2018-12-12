@@ -19,7 +19,25 @@ body {
     border-bottom: 2px solid #2b80ff;
 }
 
+#siteheader #content {
+    width: 100%;
+    text-align: center;
+}
+
 #siteheader button {
+    padding: 0 .5em;
+    text-align: center;
+    font-size: 16px;
+    margin: 0 2px;
+    height: 2em;
+    line-height: 2em;
+    color: #408dff;
+    text-decoration: none;
+    border: 0;
+    background-color: transparent;
+}
+
+#siteheader button.special {
     border: none;
     font-weight: bolder;
     background-color: #408dff;
@@ -34,19 +52,7 @@ body {
     font-size: 16px;
 }
 
-#siteheader a {
-    padding: 0 .5em;
-    text-align: center;
-    font-size: 16px;
-    margin: 0 2px;
-    height: 2em;
-    line-height: 2em;
-    color: #408dff;
-    text-decoration: none;
-
-}
-
-#siteheader a:hover {
+#siteheader button:hover {
     background-color: #2b80ff;
     border-radius: 3px;
     color: white;
@@ -91,7 +97,7 @@ body {
     display: inline-block;
 }
 
-.post .profile_picture {
+.profile_picture {
     width: 32px;
     height: 32px;
     border-radius: 32px;
@@ -122,14 +128,14 @@ body {
     display: block;
 }
 
-.post-form {
+#post-form {
     margin: 1em auto;
     padding: 0;
     display: flex;
     align-content: stretch;
 }
 
-.post-form textarea {
+#post-form textarea {
     border-radius: 3px 0px 0px 3px;
     width: 100%;
     margin: 0;
@@ -139,7 +145,7 @@ body {
     resize: none;
 }
 
-.post-form-button {
+#post-form .button {
     background-color: #2b80ff;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -199,4 +205,12 @@ body {
 
 .gray {
     color: #aaaaaa;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.absolute.right {
+    right: 0px;
 }

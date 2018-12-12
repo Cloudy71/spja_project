@@ -12,7 +12,7 @@ function followUser(username) {
             for (let i = els.length - 1; i >= 0; i--) {
                 els[i].className = "date_button gray";
                 els[i].onclick = ev => {
-                    stopFollowingUser(username);
+                    UnfollowUser(username);
                 };
                 els[i].innerText = "Stop following";
             }
@@ -20,7 +20,7 @@ function followUser(username) {
     });
 }
 
-function stopFollowingUser(username) {
+function UnfollowUser(username) {
     $.ajax({
         url: "/stop-follow/" + username
     }).done(function (data) {

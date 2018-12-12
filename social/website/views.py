@@ -95,7 +95,7 @@ def follow(request, login):
     pass
 
 
-def stop_follow(request, login):
+def unfollow(request, login):
     if len(login) == 0:
         return HttpResponse("0")
     login_user = User.objects.get(username=login)
