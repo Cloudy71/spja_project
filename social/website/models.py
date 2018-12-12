@@ -12,7 +12,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
     # Post is also Comment... Since Comment has same architecture as Post, so it can create posts under post.
-    main_post = models.ForeignKey('Post', on_delete=models.CASCADE, null=True, default=None)
+    main_post = models.ForeignKey('Post', on_delete=models.CASCADE, null=True, blank=True, default=None)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.CharField(max_length=340)
     date = models.DateTimeField(auto_now=True)

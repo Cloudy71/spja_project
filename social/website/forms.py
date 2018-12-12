@@ -18,3 +18,13 @@ class LoginForm(forms.Form):
 
 class Post(forms.Form):
     text = forms.CharField(widget=forms.Textarea, min_length=1)
+
+
+class ThumbForm(forms.Form):
+    post = forms.IntegerField()
+    type = forms.IntegerField()
+
+
+class FollowForm(forms.Form):
+    user = forms.CharField()
+    type = forms.IntegerField()

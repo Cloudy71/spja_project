@@ -2,14 +2,15 @@ import logging
 
 from django import template
 
-from website.lib.model_utils import is_user_followed_by
+from website.lib.model_utils import is_user_followed_by, get_profile_by_user
 
 register = template.Library()
 
 
 @register.filter(name="thumb_value")
 def get_thumb_value(value, user):
-    return value.get_thumb_value(user)
+    user = get_profile_by_user(user)
+    return value.get_thumb_value(user.user)
     pass
 
 

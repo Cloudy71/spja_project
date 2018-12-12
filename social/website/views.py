@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from django.http import HttpResponse
 
-from website.lib.model_utils import is_user_followed_by, get_profile_by_user
+from website.forms import ThumbForm, FollowForm
+from website.lib.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username
+from website.models import Reaction
 from .models import Profile, Post, Follow
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, LoginForm
@@ -83,26 +85,31 @@ def post(request):
     return redirect("/")
 
 
-def follow(request, login):
-    if len(login) == 0:
-        return HttpResponse("0")
-    login_user = User.objects.get(username=login)
-    if not is_user_followed_by(login_user, request.user):
-        Follow.objects.create(follower=get_profile_by_user(request.user), following=get_profile_by_user(login_user))
-        return HttpResponse("1")
-        pass
+def follow(request):
+    if request.method == "POST":
+        form = FollowForm(request.POST)
+
+        if form.is_valid() and form.cleaned_data["type"] in (0, 1) and profile_exists_by_username(
+                form.cleaned_data["user"]):
+            login_user = User.objects.get(username=form.cleaned_data["user"])
+            Follow.objects.create(follower=get_profile_by_user(request.user), following=get_profile_by_user(login_user))
+            return HttpResponse("1")
+        else:
+            return HttpResponse("0")
     return HttpResponse("0")
     pass
 
 
-def unfollow(request, login):
-    if len(login) == 0:
-        return HttpResponse("0")
-    login_user = User.objects.get(username=login)
-    if is_user_followed_by(login_user, request.user):
-        Follow.objects.get(follower=get_profile_by_user(request.user),
-                           following=get_profile_by_user(login_user)).delete()
-        return HttpResponse("1")
-        pass
+def thumb_give(request):
+    if request.POST:
+        form = ThumbForm(request.POST)
+
+        if form.is_valid() and form.cleaned_data["type"] in (-1, 0, 1) and post_exists(form.cleaned_data["post"]):
+            Reaction.objects.create(post=Post.objects.get(id=form.cleaned_data["post"]),
+                                    author=get_profile_by_user(request.user),
+                                    value=form.type)
+            # TODO: Finish...
+            return HttpResponse("1")
+        else:
+            return HttpResponse("0")
     return HttpResponse("0")
-    pass

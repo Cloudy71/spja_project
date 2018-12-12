@@ -175,6 +175,10 @@ body {
     background-color: rgb(200, 200, 200);
 }
 
+.post .button.used {
+    border: 1px solid rgb(68, 174, 76);
+}
+
 .post .menu {
     float: right;
     cursor: pointer;
