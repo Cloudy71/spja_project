@@ -2,7 +2,7 @@ import logging
 
 from django import template
 
-from website.lib.model_utils import is_user_followed_by, get_profile_by_user
+from website.libs.model_utils import is_user_followed_by, get_profile_by_user
 
 register = template.Library()
 

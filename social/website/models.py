@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from website.lib.const import Visibility, Thumb
-from website.lib.model_utils import get_profile_by_user
+from website.libs.const import Visibility, Thumb
+from website.libs.model_utils import get_profile_by_user
 
 
 class Profile(models.Model):

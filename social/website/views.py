@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 
 from website.forms import ThumbForm, FollowForm
-from website.lib.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username
+from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username
 from website.models import Reaction
 from .models import Profile, Post, Follow
 from django.contrib.auth.decorators import login_required
