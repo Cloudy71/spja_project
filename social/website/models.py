@@ -47,3 +47,7 @@ class Follow(models.Model):
     follower = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="follower")
     following = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="following")
     date = models.DateTimeField(auto_now=True)
+
+class Tag(models.Model):
+    name = models.CharField(max_length=340)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)

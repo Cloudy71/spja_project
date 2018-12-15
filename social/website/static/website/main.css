@@ -9,6 +9,16 @@ body {
     font-size: 25px;
 }
 
+.content p a {
+    text-decoration: none;
+    color: #2b80ff;
+}
+
+.content p a:hover {
+    text-decoration: underline;
+}
+
+
 #siteheader {
     background-color: white;
     display: flex;

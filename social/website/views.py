@@ -5,7 +5,9 @@ from django.http import HttpResponse
 from website.forms import ThumbForm, FollowForm
 from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username
 from website.models import Reaction
-from .models import Profile, Post, Follow
+from website.libs.views_utils import get_hashtags
+
+from .models import Profile, Post, Follow, Tag
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
@@ -81,7 +83,8 @@ def sign_up(request):
 def post(request):
     if request.method == "POST":
         text = request.POST["text"]
-        Post.objects.create(author=get_object_or_404(Profile, user=request.user), content=text)
+        post = Post.objects.create(author=get_object_or_404(Profile, user=request.user), content=text)
+        Tag.objects.bulk_create([Tag(name=tag, post=post) for tag in get_hashtags(text)])
     return redirect("/")
 
 
@@ -97,7 +100,6 @@ def follow(request):
         else:
             return HttpResponse("0")
     return HttpResponse("0")
-    pass
 
 
 def thumb_give(request):
@@ -113,3 +115,10 @@ def thumb_give(request):
         else:
             return HttpResponse("0")
     return HttpResponse("0")
+
+def tags(request, tag):
+    context = {
+        "posts": [x.post for x in Tag.objects.filter(name=tag).select_related("post").order_by("-post__date")[:10]],
+        "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
+    }
+    return render(request, "website/timeline.html", context)

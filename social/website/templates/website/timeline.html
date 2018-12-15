@@ -24,7 +24,9 @@
                     {% endif %}
                 </div>
                 <div class="menu"><img src="{% static "images/menu.png" %}" width="20"></div>
-                <p>{{ post.content }}</p>
+                {% autoescape off %}
+                    <p>{{ post.content|add_tags }}</p>
+                {% endautoescape %}
             </div>
             <div class="messages">
                 {% if post|thumb_value:logged_user == 0 %}

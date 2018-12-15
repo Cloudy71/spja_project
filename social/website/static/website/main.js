@@ -60,10 +60,10 @@ function sendFollow(username, type) {
 function parseAllButtonHref() {
     let els = document.getElementsByTagName("BUTTON");
     for (let i = 0; i < els.length; i++) {
-        if(els[i].className == ".special")
-        els[i].onclick = (e) => {
-            location.href = els[i].getAttribute("href");
-        };
+        if(els[i].className != "special")
+            els[i].onclick = (e) => {
+                location.href = els[i].getAttribute("href");
+            };
     }
 }
 
