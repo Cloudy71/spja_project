@@ -90,3 +90,38 @@ function sendThumb(postId, type) {
 
     });*/
 }
+
+function sendComment(postId, area) {
+    $.ajax({
+        url: "/response",
+        method: "POST",
+        data: {
+            content: area.value,
+            main_post: Number(postId),
+        },
+        datatype: "json"
+    }).done(response => {
+        console.log(response);
+        area.remove()
+    });
+}
+
+function commentOnPost(postId) {
+    var post = document.getElementById("post_" + postId);
+    var area = document.createElement("textarea");
+    area.className = "response";
+    area.value = "Write your response."
+    area.setAttribute("unused", "true");
+    area.addEventListener("click", (evt) => {
+        if(area.getAttribute("unused") === "true") {
+            area.value = "";
+            area.setAttribute("unused", "false");
+        }
+    });
+    area.addEventListener("keypress", evt => {
+        if(evt.which === 13) {
+            sendComment(postId, area)
+        }
+    })
+    post.appendChild(area)
+}

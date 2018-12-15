@@ -232,3 +232,14 @@ body {
 .absolute.right {
     right: 0px;
 }
+
+.response {
+    resize: none;
+    width: 97.5%;
+    margin: 5px;
+    border: 1px solid rgb(214, 214, 214);
+    border-radius: 9px;
+    padding: 4px;
+    height: 2.5em;
+    color: #222222;
+}

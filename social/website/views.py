@@ -9,7 +9,7 @@ from website.libs.views_utils import get_hashtags
 
 from .models import Profile, Post, Follow, Tag
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, LoginForm
+from .forms import UserForm, LoginForm, ResponseForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
@@ -110,7 +110,6 @@ def thumb_give(request):
             Reaction.objects.create(post=Post.objects.get(id=form.cleaned_data["post"]),
                                     author=get_profile_by_user(request.user),
                                     value=form.type)
-            # TODO: Finish...
             return HttpResponse("1")
         else:
             return HttpResponse("0")
@@ -122,3 +121,16 @@ def tags(request, tag):
         "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
     }
     return render(request, "website/timeline.html", context)
+
+@login_required
+def response(request):
+    if request.POST:
+        form = ResponseForm(request.POST)
+        if form.is_valid():
+            post = Post.objects.create (
+                main_post = get_object_or_404(Post, id = form.cleaned_data["main_post"]),
+                author = get_object_or_404(Profile, user = request.user),
+                content = form.cleaned_data["content"]
+            )
+            return HttpResponse("OK")
+    return HttpResponse("NO :(")

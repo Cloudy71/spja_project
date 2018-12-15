@@ -8,7 +8,7 @@
     {% endblock %}
 
     {% for post in posts %}
-        <div class="post" postid={{ post.id }}>
+        <div class="post" id="post_{{post.id}}" postid={{ post.id }}>
             <div class="content">
                 <div class="profile_picture"></div>
                 <div class="info">
@@ -47,8 +47,12 @@
                             src="{% static "images/thumb_down_n.png" %}"
                             width="20"> {{ post.get_thumbs_down }}</div>
                 {% endif %}
-                <div class="button"><img src="{% static "images/messages.png" %}"
+                <div class="button" onclick="commentOnPost({{ post.id }})" ><img src="{% static "images/messages.png" %}"
                                          width="20"> {{ post.get_message_count }}</div>
+            
+            </div>
+            <div>
+                
             </div>
         </div>
     {% endfor %}

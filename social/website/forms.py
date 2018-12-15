@@ -28,3 +28,7 @@ class ThumbForm(forms.Form):
 class FollowForm(forms.Form):
     user = forms.CharField()
     type = forms.IntegerField()
+
+class ResponseForm(forms.Form):
+    main_post = forms.IntegerField()
+    content = forms.CharField(min_length=1)
