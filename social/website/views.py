@@ -105,7 +105,7 @@ def follow(request):
             return HttpResponse("0")
     return HttpResponse("0")
 
-
+@login_required
 def thumb_give(request):
     if request.method == "POST":
         form = ThumbForm(request.POST)
