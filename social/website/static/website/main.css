@@ -169,12 +169,17 @@ body {
 .post .button {
     border-radius: 5px;
     background-color: rgb(222, 222, 222);
+    border: 1px solid rgb(222, 222, 222);
     display: inline-block;
     cursor: pointer;
     padding: 2px;
     box-sizing: border-box;
     height: 28px;
     vertical-align: top;
+}
+
+.post .button label {
+    cursor: pointer;
 }
 
 .post .button img {
@@ -230,7 +235,7 @@ body {
 }
 
 .absolute.right {
-    right: 0px;
+    right: 0;
 }
 
 .response {
@@ -251,6 +256,16 @@ body {
 }
 
 .comment .whole_name {
-    margin: 0 auto;
-    font-size:15px;
+    font-size: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 4px;
+    margin-left: 4px;
+}
+
+.comment .comment_content {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+    margin-top: 4px;
 }

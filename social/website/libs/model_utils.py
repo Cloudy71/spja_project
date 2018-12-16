@@ -41,3 +41,13 @@ def profile_exists_by_username(username):
         return True
     except ObjectDoesNotExist:
         return False
+
+
+def reaction_exist(post, user):
+    user = get_profile_by_user(user)
+    try:
+        from website.models import Reaction
+        Reaction.objects.get(author=user, post=post)
+        return True
+    except ObjectDoesNotExist:
+        return False

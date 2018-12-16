@@ -12,7 +12,7 @@ function getCookie(c_name) {
 }
 
 function displayPostForm() {
-    var form = document.getElementById("post-form");
+    let form = document.getElementById("post-form");
     form.style.display = "flex";
 }
 
@@ -60,7 +60,7 @@ function sendFollow(username, type) {
 function parseAllButtonHref() {
     let els = document.getElementsByTagName("BUTTON");
     for (let i = 0; i < els.length; i++) {
-        if(els[i].className != "special")
+        if (els[i].className !== "special")
             els[i].onclick = (e) => {
                 location.href = els[i].getAttribute("href");
             };
@@ -71,9 +71,9 @@ window.onload = () => {
     parseAllButtonHref();
 };
 
-function sendThumb(postId, type) {
+function sendThumb(element, postId, type) {
     $.ajax({
-        url: "/thumb_give/",
+        url: "/thumb-give/",
         method: "POST",
         data: {
             post: postId,
@@ -81,9 +81,48 @@ function sendThumb(postId, type) {
         },
         datatype: "json"
     }).done(function (data) {
-        if (data === "1") {
-
+        if (data.startsWith("0")) {
+            return;
         }
+        let json = JSON.parse(data);
+        let buttons = element.parentNode.getElementsByTagName("DIV");
+        buttons[0].getElementsByTagName("LABEL")[0].innerText = json["up"];
+        buttons[1].getElementsByTagName("LABEL")[0].innerText = json["down"];
+        if (type === -1) {
+            buttons[0].className = "button";
+            buttons[0].onclick = () => {
+                sendThumb(element, postId, 0);
+            };
+            buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up_n.png";
+            buttons[1].className = "button";
+            buttons[1].onclick = () => {
+                sendThumb(element, postId, 1);
+            };
+            buttons[1].getElementsByTagName("IMG")[0].src = "/static/images/thumb_down_n.png";
+        } else if (type === 0) {
+            buttons[0].className = "button g_used";
+            buttons[0].onclick = () => {
+                sendThumb(element, postId, -1);
+            };
+            buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up.png";
+            buttons[1].className = "button";
+            buttons[1].onclick = () => {
+                sendThumb(element, postId, 1);
+            };
+            buttons[1].getElementsByTagName("IMG")[0].src = "/static/images/thumb_down_n.png";
+        } else if (type === 1) {
+            buttons[0].className = "button";
+            buttons[0].onclick = () => {
+                sendThumb(element, postId, 0);
+            };
+            buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up_n.png";
+            buttons[1].className = "button r_used";
+            buttons[1].onclick = () => {
+                sendThumb(element, postId, -1);
+            };
+            buttons[1].getElementsByTagName("IMG")[0].src = "/static/images/thumb_down.png";
+        }
+        console.log(element.parentNode);
     });
 
     /*$.post("/thumb_give/", {post: postId, type: type}, (data) => {
@@ -106,53 +145,58 @@ function sendComment(postId, area) {
 }
 
 function createComment(post) {
-    var response = document.createElement("div");
-    var content = document.createElement("p");
-    var user = document.createElement("a");
+    let response = document.createElement("div");
+    let content = document.createElement("div");
+    let user = document.createElement("a");
+    let picture = document.createElement("div");
     user.className = "whole_name";
     content.innerText = post.content;
+    content.className = "comment_content";
     user.href = "/profile/" + post.login;
     user.innerText = post.author;
+    picture.className = "profile_picture";
     response.className = "comment";
+    picture.style.width = "24px";
+    picture.style.height = "24px";
+    response.appendChild(picture);
     response.appendChild(user);
     response.appendChild(content);
     return response;
 }
 
 function createCommentList(responses) {
-    console.log()
-    var posts = JSON.parse(responses);
+    console.log();
+    let posts = JSON.parse(responses);
     return posts.map(post => createComment(post));
 }
 
 function createComments(postId, posts) {
-    var area = document.createElement("textarea");
-    var post = document.getElementById("post_" + postId);
-    var responses = document.createElement("div");
+    let area = document.createElement("textarea");
+    let post = document.getElementById("post_" + postId);
+    let responses = document.createElement("div");
     area.className = "response";
-    area.value = "Write your response."
+    area.value = "Write your response.";
     area.setAttribute("unused", "true");
-    createCommentList(posts).forEach(r => responses.appendChild(r))
     responses.appendChild(area);
-    
+    createCommentList(posts).forEach(r => responses.appendChild(r));
+
     area.addEventListener("click", (evt) => {
-        
-        if(area.getAttribute("unused") === "true") {
+        if (area.getAttribute("unused") === "true") {
             area.value = "";
             area.setAttribute("unused", "false");
         }
     });
     area.addEventListener("keydown", evt => {
-        if(evt.which === 13) {
+        if (evt.which === 13) {
             sendComment(postId, area);
         }
-    })
-    post.appendChild(responses)
+    });
+    post.appendChild(responses);
 }
 
 function commentOnPost(postId) {
-    var post = document.getElementById("post_" + postId);
-    if(post.getAttribute("comments") === null)
+    let post = document.getElementById("post_" + postId);
+    if (post.getAttribute("comments") === null)
         post.setAttribute("comments", "true");
     else
         return;

@@ -16,7 +16,8 @@ class Post(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.CharField(max_length=340)
     date = models.DateTimeField(auto_now=True)
-    visibility = models.PositiveSmallIntegerField(default=Visibility.PUBLIC)  # 0: public, 1: friends, 2: myself; TODO: show posts only by visibility attribute.
+    visibility = models.PositiveSmallIntegerField(
+        default=Visibility.PUBLIC)  # 0: public, 1: friends, 2: myself; TODO: show posts only by visibility attribute.
 
     def __str__(self):
         return self.content[:40]
@@ -32,8 +33,11 @@ class Post(models.Model):
         if profile is None:
             raise ValueError("User must be user type or profile type.")
 
-        reaction = Reaction.objects.all().filter(post=self, author=profile)[::1]
-        return -1 if len(reaction) == 0 else reaction.filter().value
+        try:
+            reaction = Reaction.objects.get(post=self, author=profile)
+            return reaction.value
+        except ValueError:
+            return -1
 
     def get_message_count(self):
         return len(Post.objects.all().filter(main_post=self))
@@ -50,6 +54,7 @@ class Follow(models.Model):
     follower = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="follower")
     following = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="following")
     date = models.DateTimeField(auto_now=True)
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=340)

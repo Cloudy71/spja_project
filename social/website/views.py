@@ -3,7 +3,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 
 from website.forms import ThumbForm, FollowForm
-from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username
+from website.libs.const import Thumb
+from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username, \
+    reaction_exist
 from website.models import Reaction
 from website.libs.views_utils import get_hashtags
 
@@ -14,6 +16,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core import serializers
 from json import dumps
+
 
 def index(request):
     if not request.user.is_authenticated:
@@ -104,17 +107,31 @@ def follow(request):
 
 
 def thumb_give(request):
-    if request.POST:
+    if request.method == "POST":
         form = ThumbForm(request.POST)
 
         if form.is_valid() and form.cleaned_data["type"] in (-1, 0, 1) and post_exists(form.cleaned_data["post"]):
-            Reaction.objects.create(post=Post.objects.get(id=form.cleaned_data["post"]),
-                                    author=get_profile_by_user(request.user),
-                                    value=form.type)
-            return HttpResponse("1")
+            this_post = Post.objects.get(id=form.cleaned_data["post"])
+            this_profile = get_profile_by_user(request.user)
+
+            if form.cleaned_data["type"] == -1 and reaction_exist(this_post, request.user):
+                Reaction.objects.get(author=this_profile, post=this_post).delete()
+                pass
+            else:
+                if reaction_exist(this_post, request.user):
+                    react = Reaction.objects.get(post=this_post, author=this_profile)
+                    react.value = form.cleaned_data["type"]
+                    react.save()
+                else:
+                    Reaction.objects.create(post=this_post,
+                                            author=this_profile,
+                                            value=form.cleaned_data["type"])
+            return HttpResponse(dumps({"up": len(Reaction.objects.filter(post=this_post, value=Thumb.UP)),
+                                       "down": len(Reaction.objects.filter(post=this_post, value=Thumb.DOWN))}))
         else:
             return HttpResponse("0")
     return HttpResponse("0")
+
 
 def tags(request, tag):
     context = {
@@ -123,20 +140,23 @@ def tags(request, tag):
     }
     return render(request, "website/timeline.html", context)
 
+
 @login_required
 def response(request):
     if request.POST:
         form = ResponseForm(request.POST)
         if form.is_valid():
-            post = Post.objects.create (
-                main_post = get_object_or_404(Post, id = form.cleaned_data["main_post"]),
-                author = get_object_or_404(Profile, user = request.user),
-                content = form.cleaned_data["content"]
+            post = Post.objects.create(
+                main_post=get_object_or_404(Post, id=form.cleaned_data["main_post"]),
+                author=get_object_or_404(Profile, user=request.user),
+                content=form.cleaned_data["content"]
             )
             return HttpResponse("OK")
     return HttpResponse("NO :(")
 
+
 def get_responses(request, post):
-    posts = Post.objects.filter(main_post = get_object_or_404(Post, id = post)).select_related().order_by('date')
-    posts_dict = [{"content": x.content, "author": x.author.user.get_full_name(), "login": x.author.user.username} for x in posts]
+    posts = Post.objects.filter(main_post=get_object_or_404(Post, id=post)).select_related().order_by('date')
+    posts_dict = [{"content": x.content, "author": x.author.user.get_full_name(), "login": x.author.user.username} for x
+                  in posts]
     return HttpResponse(dumps(posts_dict))

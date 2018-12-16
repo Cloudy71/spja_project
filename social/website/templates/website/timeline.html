@@ -8,7 +8,7 @@
     {% endblock %}
 
     {% for post in posts %}
-        <div class="post" id="post_{{post.id}}" postid={{ post.id }}>
+        <div class="post" id="post_{{ post.id }}" postid={{ post.id }}>
             <div class="content">
                 <div class="profile_picture"></div>
                 <div class="info">
@@ -30,26 +30,28 @@
             </div>
             <div class="messages">
                 {% if post|thumb_value:logged_user == 0 %}
-                    <div class="button g_used" onclick="sendThumb({{ post.id }}, -1);"><img
-                            src="{% static "images/thumb_up.png" %}" width="20"> {{ post.get_thumbs_up }}
+                    <div class="button g_used" onclick="sendThumb(this, {{ post.id }}, -1);"><img
+                            src="{% static "images/thumb_up.png" %}" width="20"> <label>{{ post.get_thumbs_up }}</label>
                     </div>
                 {% else %}
-                    <div class="button" onclick="sendThumb({{ post.id }}, 0);"><img
-                            src="{% static "images/thumb_up_n.png" %}" width="20"> {{ post.get_thumbs_up }}
+                    <div class="button" onclick="sendThumb(this, {{ post.id }}, 0);"><img
+                            src="{% static "images/thumb_up_n.png" %}" width="20">
+                        <label>{{ post.get_thumbs_up }}</label>
                     </div>
                 {% endif %}
                 {% if post|thumb_value:logged_user == 1 %}
-                    <div class="button r_used" onclick="sendThumb({{ post.id }}, -1);"><img
+                    <div class="button r_used" onclick="sendThumb(this, {{ post.id }}, -1);"><img
                             src="{% static "images/thumb_down.png" %}"
-                            width="20"> {{ post.get_thumbs_down }}</div>
+                            width="20"> <label>{{ post.get_thumbs_down }}</label></div>
                 {% else %}
-                    <div class="button" onclick="sendThumb({{ post.id }}, 1);"><img
+                    <div class="button" onclick="sendThumb(this, {{ post.id }}, 1);"><img
                             src="{% static "images/thumb_down_n.png" %}"
-                            width="20"> {{ post.get_thumbs_down }}</div>
+                            width="20"> <label>{{ post.get_thumbs_down }}</label></div>
                 {% endif %}
-                <div class="button" onclick="commentOnPost({{ post.id }})" ><img src="{% static "images/messages.png" %}"
-                                         width="20"> {{ post.get_message_count }}</div>
-            
+                <div class="button" onclick="commentOnPost({{ post.id }})"><img src="{% static "images/messages.png" %}"
+                                                                                width="20"> {{ post.get_message_count }}
+                </div>
+
             </div>
         </div>
     {% endfor %}
