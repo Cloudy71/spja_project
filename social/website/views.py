@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from website.forms import ThumbForm, FollowForm
 from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username
@@ -12,7 +12,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserForm, LoginForm, ResponseForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-
+from django.core import serializers
+from json import dumps
 
 def index(request):
     if not request.user.is_authenticated:
@@ -134,3 +135,8 @@ def response(request):
             )
             return HttpResponse("OK")
     return HttpResponse("NO :(")
+
+def get_responses(request, post):
+    posts = Post.objects.filter(main_post = get_object_or_404(Post, id = post)).select_related()
+    posts_dict = [{"content": x.content, "author": x.author.user.get_full_name(), "login": x.author.user.username} for x in posts]
+    return HttpResponse(dumps(posts_dict))

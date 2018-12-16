@@ -106,12 +106,36 @@ function sendComment(postId, area) {
     });
 }
 
-function commentOnPost(postId) {
-    var post = document.getElementById("post_" + postId);
+function createComment(post) {
+    var response = document.createElement("div");
+    var content = document.createElement("p");
+    var user = document.createElement("a");
+    user.className = "whole_name";
+    content.innerText = post.content;
+    user.href = "/profile/" + post.login;
+    user.innerText = post.author;
+    response.className = "comment";
+    response.appendChild(user);
+    response.appendChild(content);
+    return response;
+}
+
+function createCommentList(responses) {
+    console.log()
+    var posts = JSON.parse(responses);
+    return posts.map(post => createComment(post));
+}
+
+function createComments(postId, posts) {
     var area = document.createElement("textarea");
+    var post = document.getElementById("post_" + postId);
+    var responses = document.createElement("div");
     area.className = "response";
     area.value = "Write your response."
     area.setAttribute("unused", "true");
+    createCommentList(posts).forEach(r => responses.appendChild(r))
+    responses.appendChild(area);
+    
     area.addEventListener("click", (evt) => {
         if(area.getAttribute("unused") === "true") {
             area.value = "";
@@ -123,5 +147,13 @@ function commentOnPost(postId) {
             sendComment(postId, area)
         }
     })
-    post.appendChild(area)
+    post.appendChild(responses)
+}
+
+function commentOnPost(postId) {
+    
+    $.ajax({
+        url: "/response/" + postId,
+        method: "GET"
+    }).done(resp => createComments(postId, resp))
 }

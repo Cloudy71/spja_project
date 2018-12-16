@@ -243,3 +243,14 @@ body {
     height: 2.5em;
     color: #222222;
 }
+
+.comment {
+    border-top: 1px solid rgb(214, 214, 214);
+    margin: 0 auto;
+    padding: 7px;
+}
+
+.comment .whole_name {
+    margin: 0 auto;
+    font-size:15px;
+}
