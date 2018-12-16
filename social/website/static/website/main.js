@@ -73,7 +73,7 @@ window.onload = () => {
 
 function sendThumb(postId, type) {
     $.ajax({
-        url: "/thumb_give/",
+        url: "/thumb-give/",
         method: "POST",
         data: {
             post: postId,
@@ -120,7 +120,6 @@ function createComment(post) {
 }
 
 function createCommentList(responses) {
-    console.log()
     var posts = JSON.parse(responses);
     return posts.map(post => createComment(post));
 }

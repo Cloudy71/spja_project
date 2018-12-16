@@ -102,15 +102,20 @@ def follow(request):
             return HttpResponse("0")
     return HttpResponse("0")
 
-
+@login_required
 def thumb_give(request):
     if request.POST:
         form = ThumbForm(request.POST)
-
-        if form.is_valid() and form.cleaned_data["type"] in (-1, 0, 1) and post_exists(form.cleaned_data["post"]):
-            Reaction.objects.create(post=Post.objects.get(id=form.cleaned_data["post"]),
-                                    author=get_profile_by_user(request.user),
-                                    value=form.type)
+        if not form.is_valid():
+            return HttpResponse("0")
+        post = Post.objects.get(id=form.cleaned_data["post"])
+        user = get_profile_by_user(request.user)
+        if Reaction.objects.filter(post=post, author = user).exists():
+            return HttpResponse("0")
+        if form.cleaned_data["type"] in (-1, 0, 1) and post_exists(form.cleaned_data["post"]):
+            Reaction.objects.create(post=post,
+                                    author=user,
+                                    value=form.cleaned_data["type"])
             return HttpResponse("1")
         else:
             return HttpResponse("0")
@@ -128,7 +133,7 @@ def response(request):
     if request.POST:
         form = ResponseForm(request.POST)
         if form.is_valid():
-            post = Post.objects.create (
+            Post.objects.create (
                 main_post = get_object_or_404(Post, id = form.cleaned_data["main_post"]),
                 author = get_object_or_404(Profile, user = request.user),
                 content = form.cleaned_data["content"]
