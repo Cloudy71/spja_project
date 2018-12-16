@@ -18,6 +18,9 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now=True)
     visibility = models.PositiveSmallIntegerField(default=Visibility.PUBLIC)  # 0: public, 1: friends, 2: myself; TODO: show posts only by visibility attribute.
 
+    def __str__(self):
+        return self.content[:40]
+
     def get_thumbs_up(self):
         return len(Reaction.objects.all().filter(post=self, value=0))
 

@@ -100,9 +100,8 @@ function sendComment(postId, area) {
             main_post: Number(postId),
         },
         datatype: "json"
-    }).done(response => {
-        console.log(response);
-        area.remove()
+    }).done(() => {
+        area.value = "";
     });
 }
 
@@ -137,21 +136,27 @@ function createComments(postId, posts) {
     responses.appendChild(area);
     
     area.addEventListener("click", (evt) => {
+        
         if(area.getAttribute("unused") === "true") {
             area.value = "";
             area.setAttribute("unused", "false");
         }
     });
-    area.addEventListener("keypress", evt => {
+    area.addEventListener("keydown", evt => {
         if(evt.which === 13) {
-            sendComment(postId, area)
+            sendComment(postId, area);
         }
     })
     post.appendChild(responses)
 }
 
 function commentOnPost(postId) {
-    
+    var post = document.getElementById("post_" + postId);
+    if(post.getAttribute("comments") === null)
+        post.setAttribute("comments", "true");
+    else
+        return;
+
     $.ajax({
         url: "/response/" + postId,
         method: "GET"

@@ -23,7 +23,7 @@ def index(request):
         rndr = "website/index.html"
     else:
         context = {
-            "posts": Post.objects.select_related("author").order_by("-date")[:10],
+            "posts": Post.objects.select_related("author").order_by("-date").filter(main_post=None)[:15],
             "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
         }
         rndr = "website/timeline.html"
@@ -137,6 +137,6 @@ def response(request):
     return HttpResponse("NO :(")
 
 def get_responses(request, post):
-    posts = Post.objects.filter(main_post = get_object_or_404(Post, id = post)).select_related()
+    posts = Post.objects.filter(main_post = get_object_or_404(Post, id = post)).select_related().order_by('date')
     posts_dict = [{"content": x.content, "author": x.author.user.get_full_name(), "login": x.author.user.username} for x in posts]
     return HttpResponse(dumps(posts_dict))
