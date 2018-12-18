@@ -32,3 +32,17 @@ def get_thumb_value(value, user):
 @register.filter(name="followed_by")
 def is_followed_by(user1, user2):
     return is_user_followed_by(user1, user2)
+
+
+@register.filter(name="get_followers")
+def get_followers(profile):
+    from website.models import Follow
+    profile = get_profile_by_user(profile)
+    return len(Follow.objects.filter(following=profile))
+
+
+@register.filter(name="get_following")
+def get_following(profile):
+    from website.models import Follow
+    profile = get_profile_by_user(profile)
+    return len(Follow.objects.filter(follower=profile))

@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from website.forms import ThumbForm, FollowForm
 from website.libs.const import Thumb
 from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username, \
-    reaction_exist, reaction_exist_value
+    reaction_exist, reaction_exist_value, follow_exist
 from website.models import Reaction
 from website.libs.views_utils import get_hashtags
 
@@ -99,8 +99,11 @@ def follow(request):
 
         if form.is_valid() and form.cleaned_data["type"] in (0, 1) and profile_exists_by_username(
                 form.cleaned_data["user"]):
-            login_user = User.objects.get(username=form.cleaned_data["user"])
-            Follow.objects.create(follower=get_profile_by_user(request.user), following=get_profile_by_user(login_user))
+            form_profile = get_profile_by_user(User.objects.get(username=form.cleaned_data["user"]))
+            if form.cleaned_data["type"] == 1 and follow_exist(request.user, form_profile):
+                Follow.objects.get(follower=get_profile_by_user(request.user), following=form_profile).delete()
+            elif not follow_exist(request.user, form_profile):
+                Follow.objects.create(follower=get_profile_by_user(request.user), following=form_profile)
             return HttpResponse("1")
         else:
             return HttpResponse("0")
@@ -158,7 +161,7 @@ def response(request):
 
 
 def get_responses(request, post):
-    posts = Post.objects.filter(main_post=get_object_or_404(Post, id=post)).select_related().order_by('date')
+    posts = Post.objects.filter(main_post=get_object_or_404(Post, id=post)).select_related().order_by('-date')
     posts_dict = [
         {"id": x.id, "content": x.content, "author": x.author.user.get_full_name(), "login": x.author.user.username,
          "thumb_ups": [len(Reaction.objects.filter(post=x, value=Thumb.UP)),

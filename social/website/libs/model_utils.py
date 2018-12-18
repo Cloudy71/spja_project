@@ -61,3 +61,14 @@ def reaction_exist_value(post, user, value):
         return True
     except ObjectDoesNotExist:
         return False
+
+
+def follow_exist(follower, following):
+    follower = get_profile_by_user(follower)
+    following = get_profile_by_user(following)
+    try:
+        from website.models import Follow
+        Follow.objects.get(following=following, follower=follower)
+        return True
+    except ObjectDoesNotExist:
+        return False
