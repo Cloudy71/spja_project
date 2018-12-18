@@ -118,12 +118,24 @@ body {
 }
 
 .post .messages {
+    background-color: rgb(244, 244, 244);
+}
+
+.post .reactions {
     padding-top: 6px;
     padding-left: .5em;
     border-top: 1px solid #BBBBBB;
-
+    background-color: rgb(244, 244, 244);
     margin: 0 auto;
     height: 32px;
+}
+
+.post .reactions_mini {
+    border-top: 1px solid #BBBBBB;
+    background-color: rgb(244, 244, 244);
+    height: 20px;
+    margin-top: 4px;
+    padding-top: 4px;
 }
 
 .post:hover {
@@ -176,6 +188,11 @@ body {
     box-sizing: border-box;
     height: 28px;
     vertical-align: top;
+}
+
+.post .button.mini {
+    height: 24px;
+    margin-right: 4px;
 }
 
 .post .button label {
@@ -251,8 +268,10 @@ body {
 
 .comment {
     border-top: 1px solid rgb(214, 214, 214);
-    margin: 0 auto;
+    border-bottom: 1px solid rgb(214, 214, 214);
+    border-radius: 5px;
     padding: 7px;
+    margin-top: 4px;
 }
 
 .comment .whole_name {

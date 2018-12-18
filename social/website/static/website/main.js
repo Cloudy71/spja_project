@@ -89,34 +89,34 @@ function sendThumb(element, postId, type) {
         buttons[0].getElementsByTagName("LABEL")[0].innerText = json["up"];
         buttons[1].getElementsByTagName("LABEL")[0].innerText = json["down"];
         if (type === -1) {
-            buttons[0].className = "button";
+            buttons[0].className = "button" + (buttons[0].className.indexOf("mini") >= 0 ? " mini" : "");
             buttons[0].onclick = () => {
                 sendThumb(element, postId, 0);
             };
             buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up_n.png";
-            buttons[1].className = "button";
+            buttons[1].className = "button" + (buttons[1].className.indexOf("mini") >= 0 ? " mini" : "");
             buttons[1].onclick = () => {
                 sendThumb(element, postId, 1);
             };
             buttons[1].getElementsByTagName("IMG")[0].src = "/static/images/thumb_down_n.png";
         } else if (type === 0) {
-            buttons[0].className = "button g_used";
+            buttons[0].className = "button" + (buttons[0].className.indexOf("mini") >= 0 ? " mini" : "") + " g_used";
             buttons[0].onclick = () => {
                 sendThumb(element, postId, -1);
             };
             buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up.png";
-            buttons[1].className = "button";
+            buttons[1].className = "button" + (buttons[1].className.indexOf("mini") >= 0 ? " mini" : "");
             buttons[1].onclick = () => {
                 sendThumb(element, postId, 1);
             };
             buttons[1].getElementsByTagName("IMG")[0].src = "/static/images/thumb_down_n.png";
         } else if (type === 1) {
-            buttons[0].className = "button";
+            buttons[0].className = "button" + (buttons[0].className.indexOf("mini") >= 0 ? " mini" : "");
             buttons[0].onclick = () => {
                 sendThumb(element, postId, 0);
             };
             buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up_n.png";
-            buttons[1].className = "button r_used";
+            buttons[1].className = "button" + (buttons[1].className.indexOf("mini") >= 0 ? " mini" : "") + " r_used";
             buttons[1].onclick = () => {
                 sendThumb(element, postId, -1);
             };
@@ -144,11 +144,28 @@ function sendComment(postId, area) {
     });
 }
 
+function createMiniThumb(type, postId, used, num) {
+    let button = document.createElement("DIV");
+    let img = document.createElement("IMG");
+    let label = document.createElement("LABEL");
+    button.className = "button mini" + (used ? " " + (type === 0 ? "g" : "r") + "_used" : "");
+    button.onclick = () => {
+        sendThumb(button, postId, used ? -1 : type);
+    };
+    img.src = "static/images/thumb_" + (type === 0 ? "up" : "down") + (!used ? "_n" : "") + ".png";
+    img.width = "14";
+    label.innerText = num;
+    button.appendChild(img);
+    button.appendChild(label);
+    return button;
+}
+
 function createComment(post) {
     let response = document.createElement("div");
     let content = document.createElement("div");
     let user = document.createElement("a");
     let picture = document.createElement("div");
+    let reactions = document.createElement("DIV");
     user.className = "whole_name";
     content.innerText = post.content;
     content.className = "comment_content";
@@ -158,9 +175,17 @@ function createComment(post) {
     response.className = "comment";
     picture.style.width = "24px";
     picture.style.height = "24px";
+    reactions.className = "reactions_mini";
     response.appendChild(picture);
     response.appendChild(user);
     response.appendChild(content);
+    response.appendChild(reactions);
+
+    let thumb_up = createMiniThumb(0, post.id, post.thumb_ups[1], post.thumb_ups[0]);
+    reactions.appendChild(thumb_up);
+    let thumb_down = createMiniThumb(1, post.id, post.thumb_downs[1], post.thumb_downs[0]);
+    reactions.appendChild(thumb_down);
+
     return response;
 }
 
@@ -178,6 +203,7 @@ function createComments(postId, posts) {
     area.value = "Write your response.";
     area.setAttribute("unused", "true");
     responses.appendChild(area);
+    responses.className = "messages";
     createCommentList(posts).forEach(r => responses.appendChild(r));
 
     area.addEventListener("click", (evt) => {

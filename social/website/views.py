@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from website.forms import ThumbForm, FollowForm
 from website.libs.const import Thumb
 from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username, \
-    reaction_exist
+    reaction_exist, reaction_exist_value
 from website.models import Reaction
 from website.libs.views_utils import get_hashtags
 
@@ -92,6 +92,7 @@ def post(request):
     return redirect("/")
 
 
+@login_required
 def follow(request):
     if request.method == "POST":
         form = FollowForm(request.POST)
@@ -104,6 +105,7 @@ def follow(request):
         else:
             return HttpResponse("0")
     return HttpResponse("0")
+
 
 @login_required
 def thumb_give(request):
@@ -157,6 +159,12 @@ def response(request):
 
 def get_responses(request, post):
     posts = Post.objects.filter(main_post=get_object_or_404(Post, id=post)).select_related().order_by('date')
-    posts_dict = [{"content": x.content, "author": x.author.user.get_full_name(), "login": x.author.user.username} for x
-                  in posts]
+    posts_dict = [
+        {"id": x.id, "content": x.content, "author": x.author.user.get_full_name(), "login": x.author.user.username,
+         "thumb_ups": [len(Reaction.objects.filter(post=x, value=Thumb.UP)),
+                       reaction_exist_value(x, request.user, Thumb.UP)],
+         "thumb_downs": [len(Reaction.objects.filter(post=x, value=Thumb.DOWN)),
+                         reaction_exist_value(x, request.user, Thumb.DOWN)]}
+        for x
+        in posts]
     return HttpResponse(dumps(posts_dict))

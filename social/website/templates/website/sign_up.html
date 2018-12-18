@@ -1,11 +1,11 @@
 {% block content %}
-<form action="/signup" method="POST" class="form">
-    {% csrf_token %}
-    <table>
-    {{ form }}
-    </table>
-<input type="submit" value="Sign up" />&nbsp;or
-<input type="button" value="Login" onclick="showPage('login');" />
-</form>
+    <form action="/signup" method="POST" class="form">
+        {% csrf_token %}
+        <table>
+            {{ form }}
+        </table>
+        <input type="submit" value="Sign up"/>&nbsp;or
+        <input type="button" value="Login" onclick="showPage('login');"/>
+    </form>
 
 {% endblock %}

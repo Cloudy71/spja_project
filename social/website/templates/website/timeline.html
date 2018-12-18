@@ -15,12 +15,14 @@
                     <a class="whole_name"
                        href="/profile/{{ post.author.user.username }}">{{ post.author.user.get_full_name }}</a><br/>
                     <a class="date">{{ post.date }}</a>
-                    {% if post.author|followed_by:logged_user == False %}
-                        <a class="date_button blue" name="flw_{{ post.author.user.username }}"
-                           onclick="sendFollow('{{ post.author.user.username }}', 0);">Follow</a>
-                    {% else %}
-                        <a class="date_button gray" name="flw_{{ post.author.user.username }}"
-                           onclick="sendFollow('{{ post.author.user.username }}', 1);">Unfollow</a>
+                    {% if post.author != logged_user %}
+                        {% if post.author|followed_by:logged_user == False %}
+                            <a class="date_button blue" name="flw_{{ post.author.user.username }}"
+                               onclick="sendFollow('{{ post.author.user.username }}', 0);">Follow</a>
+                        {% else %}
+                            <a class="date_button gray" name="flw_{{ post.author.user.username }}"
+                               onclick="sendFollow('{{ post.author.user.username }}', 1);">Unfollow</a>
+                        {% endif %}
                     {% endif %}
                 </div>
                 <div class="menu"><img src="{% static "images/menu.png" %}" width="20"></div>
@@ -28,7 +30,7 @@
                     <p>{{ post.content|add_tags }}</p>
                 {% endautoescape %}
             </div>
-            <div class="messages">
+            <div class="reactions">
                 {% if post|thumb_value:logged_user == 0 %}
                     <div class="button g_used" onclick="sendThumb(this, {{ post.id }}, -1);"><img
                             src="{% static "images/thumb_up.png" %}" width="20"> <label>{{ post.get_thumbs_up }}</label>
