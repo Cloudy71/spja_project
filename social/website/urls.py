@@ -14,4 +14,5 @@ urlpatterns = [
     path('profile/<str:login>', views.profile),
     path('follow/', views.follow),
     path('thumb-give/', views.thumb_give),
+    path('visibility/', views.change_visibility),
 ]

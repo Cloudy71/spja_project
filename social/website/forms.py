@@ -22,13 +22,19 @@ class Post(forms.Form):
 
 class ThumbForm(forms.Form):
     post = forms.IntegerField()
-    type = forms.IntegerField()
+    type = forms.IntegerField(min_value=-1, max_value=1)
 
 
 class FollowForm(forms.Form):
     user = forms.CharField()
     type = forms.IntegerField()
 
+
 class ResponseForm(forms.Form):
     main_post = forms.IntegerField()
     content = forms.CharField(min_length=1)
+
+
+class VisibilityForm(forms.Form):
+    post = forms.IntegerField()
+    visibility = forms.IntegerField(min_value=0, max_value=2)

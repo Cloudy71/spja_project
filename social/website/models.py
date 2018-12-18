@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from website.libs.const import Visibility, Thumb
-from website.libs.model_utils import get_profile_by_user
+from website.libs.model_utils import get_profile_by_user, is_user_followed_by
 
 
 class Profile(models.Model):

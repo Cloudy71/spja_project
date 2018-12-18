@@ -32,7 +32,7 @@ function sendFollow(username, type) {
             type: type
         },
         datatype: "json"
-    }).done(function (data) {
+    }).done(data => {
         if (data === "1") {
             if (type === 0) {
                 let els = document.getElementsByName("flw_" + username);
@@ -80,7 +80,7 @@ function sendThumb(element, postId, type) {
             type: type
         },
         datatype: "json"
-    }).done(function (data) {
+    }).done(data => {
         if (data.startsWith("0")) {
             return;
         }
@@ -122,7 +122,6 @@ function sendThumb(element, postId, type) {
             };
             buttons[1].getElementsByTagName("IMG")[0].src = img_thumb_down;
         }
-        console.log(element.parentNode);
     });
 
     /*$.post("/thumb_give/", {post: postId, type: type}, (data) => {
@@ -190,7 +189,6 @@ function createComment(post) {
 }
 
 function createCommentList(responses) {
-    console.log();
     let posts = JSON.parse(responses);
     return posts.map(post => createComment(post));
 }
@@ -231,4 +229,46 @@ function commentOnPost(postId) {
         url: "/response/" + postId,
         method: "GET"
     }).done(resp => createComments(postId, resp))
+}
+
+function showContextMenu(pos, values, evals) {
+    let html = "";
+    let i = 0;
+    values.forEach((v) => {
+        html += "<button onclick='" + evals[i++] + "'>" + v + "</button>";
+    });
+
+    let menu = document.getElementById("contextmenu");
+    menu.innerHTML = html;
+    menu.style.left = pos[0] + "px";
+    menu.style.top = pos[1] + "px";
+    setTimeout(() => {
+        menu.style.display = "inline-block";
+    }, 1);
+}
+
+window.onclick = ev => {
+    let menu = document.getElementById("contextmenu");
+    if (menu.display !== "none") {
+        document.getElementById("contextmenu").style.display = "none";
+    }
+};
+
+function setVisibility(postId, visibility) {
+    $.ajax({
+        url: "/visibility/",
+        method: "POST",
+        data: {
+            post: postId,
+            visibility: visibility
+        }
+    }).done(data => {
+        if (data !== "1") {
+            return;
+        }
+
+        let post = document.getElementById("post_" + postId);
+        let btn = post.getElementsByClassName("menu");
+        btn[1].getElementsByTagName("IMG")[0].src = visibility == 0 ? img_public : (visibility == 1 ? img_followers : img_private);
+    });
 }

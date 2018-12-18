@@ -9,26 +9,40 @@
 
     {% for post in posts %}
         <div class="post" id="post_{{ post.id }}" postid={{ post.id }}>
-            <div class="content">
-                <div class="profile_picture"></div>
-                <div class="info">
-                    <a class="whole_name"
-                       href="/profile/{{ post.author.user.username }}">{{ post.author.user.get_full_name }}</a><br/>
-                    <a class="date">{{ post.date }}</a>
-                    {% if post.author != logged_user %}
-                        {% if post.author|followed_by:logged_user == False %}
-                            <a class="date_button blue" name="flw_{{ post.author.user.username }}"
-                               onclick="sendFollow('{{ post.author.user.username }}', 0);">Follow</a>
-                        {% else %}
-                            <a class="date_button gray" name="flw_{{ post.author.user.username }}"
-                               onclick="sendFollow('{{ post.author.user.username }}', 1);">Unfollow</a>
-                        {% endif %}
+        <div class="content">
+            <div class="profile_picture"></div>
+            <div class="info">
+                <a class="whole_name"
+                   href="/profile/{{ post.author.user.username }}">{{ post.author.user.get_full_name }}</a><br/>
+                <a class="date">{{ post.date }}</a>
+                {% if post.author != logged_user %}
+                    {% if post.author|followed_by:logged_user == False %}
+                        <a class="date_button blue" name="flw_{{ post.author.user.username }}"
+                           onclick="sendFollow('{{ post.author.user.username }}', 0);">Follow</a>
+                    {% else %}
+                        <a class="date_button gray" name="flw_{{ post.author.user.username }}"
+                           onclick="sendFollow('{{ post.author.user.username }}', 1);">Unfollow</a>
                     {% endif %}
-                </div>
-                <div class="menu"><img src="{% static "images/menu.png" %}" width="20"></div>
-                {% autoescape off %}
-                    <p>{{ post.content|add_tags }}</p>
-                {% endautoescape %}
+                {% endif %}
+            </div>
+            <div class="menu clickable"><img src="{% static "images/menu.png" %}" width="20"/></div>
+            {% if post.author == logged_user %}
+                <div class="menu clickable"
+                     onclick="showContextMenu([event.clientX, event.clientY], ['Public', 'Followers', 'Private'], ['setVisibility({{ post.id }},0)','setVisibility({{ post.id }},1)','setVisibility({{ post.id }},2)']);">
+            {% else %}
+                <div class="menu">
+            {% endif %}
+            {% if post.visibility == 0 %}
+                <img src="{% static "images/world.png" %}" title="Public" width="20"/>
+            {% elif post.visibility == 1 %}
+                <img src="{% static "images/people.png" %}" title="Followers" width="20"/>
+            {% elif post.visibility == 2 %}
+                <img src="{% static "images/private.png" %}" title="Private" width="20"/>
+            {% endif %}
+            </div>
+            {% autoescape off %}
+                <p>{{ post.content|add_tags }}</p>
+            {% endautoescape %}
             </div>
             <div class="reactions">
                 {% if post|thumb_value:logged_user == 0 %}

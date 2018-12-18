@@ -1,9 +1,10 @@
+from django.db.models import Case, When, Q, IntegerField
 from django.shortcuts import render, get_object_or_404, redirect
 
 from django.http import HttpResponse, JsonResponse
 
-from website.forms import ThumbForm, FollowForm
-from website.libs.const import Thumb
+from website.forms import ThumbForm, FollowForm, VisibilityForm
+from website.libs.const import Thumb, Visibility
 from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username, \
     reaction_exist, reaction_exist_value, follow_exist
 from website.models import Reaction
@@ -25,9 +26,21 @@ def index(request):
         }
         rndr = "website/index.html"
     else:
+        # list(Follow.objects.filter(follower=logged_user).values("following"))
+        # Case(
+        #     When(Q(visibility=Visibility.MYSELF) & Q(author=logged_user),
+        #          then=[Visibility.MYSELF, Visibility.FOLLOWERS, Visibility.PUBLIC]),
+        #     When(Q(visibility=Visibility.FOLLOWERS) & Q(author=logged_user),
+        #          then=[Visibility.FOLLOWERS, Visibility.PUBLIC])
+        #     default=[Visibility.PUBLIC]
+        # )
+        logged_user = Profile.objects.get(user=request.user) if request.user.is_authenticated else None
         context = {
-            "posts": Post.objects.select_related("author").order_by("-date").filter(main_post=None)[:15],
-            "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
+            "posts": Post.objects.select_related("author").order_by("-date").filter(main_post=None).exclude(
+                ~Q(author=logged_user), visibility=Visibility.MYSELF).exclude(
+                Q(~Q(author__in=Follow.objects.filter(follower=logged_user).values("following")) & ~Q(
+                    author=logged_user)), visibility=Visibility.FOLLOWERS)[:15],
+            "logged_user": logged_user,
         }
         rndr = "website/timeline.html"
 
@@ -38,10 +51,14 @@ def profile(request, login):
     if not request.user.is_authenticated:
         return index(request)
 
+    logged_user = Profile.objects.get(user=request.user) if request.user.is_authenticated else None
     context = {
         "profile": get_object_or_404(Profile, user__username=login),
-        "posts": Post.objects.filter(author__user__username=login).order_by("-date").filter(main_post=None)[:10],
-        "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
+        "posts": Post.objects.filter(author__user__username=login).order_by("-date").filter(main_post=None).exclude(
+            ~Q(author=logged_user), visibility=Visibility.MYSELF).exclude(
+            Q(~Q(author__in=Follow.objects.filter(follower=logged_user).values("following")) & ~Q(
+                author=logged_user)), visibility=Visibility.FOLLOWERS)[:10],
+        "logged_user": logged_user,
     }
     return render(request, "website/profile.html", context)
 
@@ -171,3 +188,17 @@ def get_responses(request, post):
         for x
         in posts]
     return HttpResponse(dumps(posts_dict))
+
+
+@login_required
+def change_visibility(request):
+    if request.POST:
+        form = VisibilityForm(request.POST)
+        if form.is_valid():
+            post = get_object_or_404(Post, id=form.cleaned_data["post"])
+            if post.author != get_profile_by_user(request.user):
+                return HttpResponse("0")
+            post.visibility = form.cleaned_data["visibility"]
+            post.save()
+            return HttpResponse("1")
+    return HttpResponse("0")
