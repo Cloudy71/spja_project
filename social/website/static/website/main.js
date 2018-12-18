@@ -93,34 +93,34 @@ function sendThumb(element, postId, type) {
             buttons[0].onclick = () => {
                 sendThumb(element, postId, 0);
             };
-            buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up_n.png";
+            buttons[0].getElementsByTagName("IMG")[0].src = img_thumb_up_n;
             buttons[1].className = "button" + (buttons[1].className.indexOf("mini") >= 0 ? " mini" : "");
             buttons[1].onclick = () => {
                 sendThumb(element, postId, 1);
             };
-            buttons[1].getElementsByTagName("IMG")[0].src = "/static/images/thumb_down_n.png";
+            buttons[1].getElementsByTagName("IMG")[0].src = img_thumb_down_n;
         } else if (type === 0) {
             buttons[0].className = "button" + (buttons[0].className.indexOf("mini") >= 0 ? " mini" : "") + " g_used";
             buttons[0].onclick = () => {
                 sendThumb(element, postId, -1);
             };
-            buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up.png";
+            buttons[0].getElementsByTagName("IMG")[0].src = img_thumb_up;
             buttons[1].className = "button" + (buttons[1].className.indexOf("mini") >= 0 ? " mini" : "");
             buttons[1].onclick = () => {
                 sendThumb(element, postId, 1);
             };
-            buttons[1].getElementsByTagName("IMG")[0].src = "/static/images/thumb_down_n.png";
+            buttons[1].getElementsByTagName("IMG")[0].src = img_thumb_down_n;
         } else if (type === 1) {
             buttons[0].className = "button" + (buttons[0].className.indexOf("mini") >= 0 ? " mini" : "");
             buttons[0].onclick = () => {
                 sendThumb(element, postId, 0);
             };
-            buttons[0].getElementsByTagName("IMG")[0].src = "/static/images/thumb_up_n.png";
+            buttons[0].getElementsByTagName("IMG")[0].src = img_thumb_up_n;
             buttons[1].className = "button" + (buttons[1].className.indexOf("mini") >= 0 ? " mini" : "") + " r_used";
             buttons[1].onclick = () => {
                 sendThumb(element, postId, -1);
             };
-            buttons[1].getElementsByTagName("IMG")[0].src = "/static/images/thumb_down.png";
+            buttons[1].getElementsByTagName("IMG")[0].src = img_thumb_down;
         }
         console.log(element.parentNode);
     });
@@ -152,7 +152,7 @@ function createMiniThumb(type, postId, used, num) {
     button.onclick = () => {
         sendThumb(button, postId, used ? -1 : type);
     };
-    img.src = "static/images/thumb_" + (type === 0 ? "up" : "down") + (!used ? "_n" : "") + ".png";
+    img.src = img_thumb_up.substr(0, img_thumb_up.lastIndexOf("/")) + "/thumb_" + (type === 0 ? "up" : "down") + (!used ? "_n" : "") + ".png";
     img.width = "14";
     label.innerText = num;
     button.appendChild(img);

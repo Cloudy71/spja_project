@@ -10,6 +10,7 @@ register = template.Library()
 get_tags = lambda post: re.findall(r"#(\w+)", post)
 split = lambda post: re.split(r"#\w+", post)
 
+
 @register.filter(name="add_tags")
 def post_with_tags(post):
     post_list = []

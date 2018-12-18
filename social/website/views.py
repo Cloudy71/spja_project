@@ -40,7 +40,7 @@ def profile(request, login):
 
     context = {
         "profile": get_object_or_404(Profile, user__username=login),
-        "posts": Post.objects.filter(author__user__username=login).order_by("-date")[:10],
+        "posts": Post.objects.filter(author__user__username=login).order_by("-date").filter(main_post=None)[:10],
         "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
     }
     return render(request, "website/profile.html", context)
