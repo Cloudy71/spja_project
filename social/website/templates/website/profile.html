@@ -4,6 +4,7 @@
     <div class="profile">
         <h1>{{ profile.user.get_full_name }}</h1>
         <p>@{{ profile.user.username }}</p>
+        <b>Posts</b>: {{ profile|get_posts }} <br/>
         <b>Followers</b>: {{ profile|get_followers }} <br/>
         <b>Following</b>: {{ profile|get_following }} <br/>
         {{ profile.description }}

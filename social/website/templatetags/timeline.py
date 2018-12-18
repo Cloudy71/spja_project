@@ -34,6 +34,13 @@ def is_followed_by(user1, user2):
     return is_user_followed_by(user1, user2)
 
 
+@register.filter(name="get_posts")
+def get_posts(profile):
+    from website.models import Post
+    profile = get_profile_by_user(profile)
+    return len(Post.objects.filter(main_post=None, author=profile))
+
+
 @register.filter(name="get_followers")
 def get_followers(profile):
     from website.models import Follow
