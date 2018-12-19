@@ -47,3 +47,4 @@ class ChangePassword(forms.Form):
 class ChangeName(forms.Form):
     new_name = forms.CharField(min_length=1, label="Name")
     new_surname = forms.CharField(min_length=1, label="Surname")
+    new_picture_url = forms.CharField(max_length=256, label="Picture URL")

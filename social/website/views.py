@@ -155,9 +155,15 @@ def thumb_give(request):
 
 
 def tags(request, tag):
+    logged_user = Profile.objects.get(user=request.user) if request.user.is_authenticated else None
+    posts = [x.post.id for x in Tag.objects.filter(name=tag).select_related("post").order_by("-post__date")[:10]]
+    show_posts = Post.objects.filter(id__in=posts).exclude(
+        ~Q(author=logged_user), visibility=Visibility.MYSELF).exclude(
+        Q(~Q(author__in=Follow.objects.filter(follower=logged_user).values("following")) & ~Q(
+            author=logged_user)), visibility=Visibility.FOLLOWERS)
     context = {
-        "posts": [x.post for x in Tag.objects.filter(name=tag).select_related("post").order_by("-post__date")[:10]],
-        "logged_user": Profile.objects.get(user=request.user) if request.user.is_authenticated else None,
+        "posts": show_posts,
+        "logged_user": logged_user,
     }
     return render(request, "website/timeline.html", context)
 
@@ -172,7 +178,8 @@ def response(request):
                 author=get_object_or_404(Profile, user=request.user),
                 content=form.cleaned_data["content"]
             )
-            return HttpResponse(dumps({"login": request.user.username, "name": request.user.get_full_name(), "picture_url": get_profile_picture(request.user)}))
+            return HttpResponse(dumps({"login": request.user.username, "name": request.user.get_full_name(),
+                                       "picture_url": get_profile_picture(request.user)}))
     return HttpResponse("NO :(")
 
 
@@ -206,8 +213,12 @@ def change_visibility(request):
 
 @login_required
 def settings(request):
+    picture_url = get_profile_by_user(request.user).picture_url
+    if picture_url is None:
+        picture_url = ""
     ctx = {
-        "name_form": ChangeName,
+        "name_form": ChangeName(initial={'new_name': request.user.first_name, 'new_surname': request.user.last_name,
+                                         'new_picture_url': picture_url}),
         "pass_form": ChangePassword,
         "logged_user": get_object_or_404(Profile, user=request.user)
     }
@@ -221,7 +232,10 @@ def change_name(request):
         if form.is_valid():
             request.user.first_name = form.cleaned_data["new_name"]
             request.user.last_name = form.cleaned_data["new_surname"]
+            profile = get_profile_by_user(request.user)
+            profile.picture_url = form.cleaned_data["new_picture_url"]
             request.user.save()
+            profile.save()
     return redirect("/profile/" + request.user.username)
 
 
