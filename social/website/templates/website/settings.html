@@ -1,0 +1,16 @@
+{% extends 'website/social.html' %}
+
+{% block content %}
+<table>
+    <form method="POST" action="/change-password">
+        {% csrf_token %}
+        {{pass_form}}
+        <tr><td><input type="submit" value="Change"></td></tr><tr>
+    </form>
+    <form method="POST" action="/change-name">
+        {% csrf_token %}
+        {{name_form}}
+        <tr><td><input type="submit" value="Change"></tr></td>
+    </form>
+</table>
+{% endblock %}

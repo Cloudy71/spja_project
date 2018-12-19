@@ -307,3 +307,11 @@ body {
 #contextmenu button:hover {
     background-color: rgb(64, 64, 64);
 }
+
+table {
+    margin-top: 20px;
+}
+
+table input {
+    border: 1px solid #BBBBBB;
+}

@@ -38,3 +38,12 @@ class ResponseForm(forms.Form):
 class VisibilityForm(forms.Form):
     post = forms.IntegerField()
     visibility = forms.IntegerField(min_value=0, max_value=2)
+
+class ChangePassword(forms.Form):
+    old_password = forms.CharField(min_length=8, widget=forms.PasswordInput, label="Old password")
+    new_password_repeat = forms.CharField(min_length=8, widget=forms.PasswordInput, label="New password")
+    new_password = forms.CharField(min_length=8, widget=forms.PasswordInput, label="Repeat new password")
+
+class ChangeName(forms.Form):
+    new_name = forms.CharField(min_length=1, label="Name")
+    new_surname = forms.CharField(min_length=1, label="Surname")

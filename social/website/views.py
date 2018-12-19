@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from django.http import HttpResponse, JsonResponse
 
-from website.forms import ThumbForm, FollowForm, VisibilityForm
+from website.forms import ThumbForm, FollowForm, VisibilityForm, ChangeName, ChangePassword
 from website.libs.const import Thumb, Visibility
 from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username, \
     reaction_exist, reaction_exist_value, follow_exist
@@ -203,3 +203,34 @@ def change_visibility(request):
             return HttpResponse("1")
     return HttpResponse("0")
 
+
+@login_required
+def settings(request):
+    ctx = {
+        "name_form": ChangeName,
+        "pass_form": ChangePassword,
+        "logged_user": get_object_or_404(Profile, user=request.user)
+    }
+    return render(request, 'website/settings.html', ctx)
+
+@login_required
+def change_name(request):
+    if request.POST:
+        form = ChangeName(request.POST)
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data["new_name"]
+            request.user.last_name = form.cleaned_data["new_surname"]
+            request.user.save()
+    return redirect("/profile/" + request.user.username)
+
+@login_required
+def change_password(request):
+    if request.POST:
+        form = ChangePassword(request.POST)
+        if form.is_valid() and request.user.check_password(form.cleaned_data["old_password"]):
+            if form.cleaned_data["new_password"] == form.cleaned_data["new_password_repeat"]:
+                request.user.set_password(form.cleaned_data["new_password"])
+                request.user.save()
+            return redirect("/settings/")
+
+    return redirect("/profile/" + request.user.username)
