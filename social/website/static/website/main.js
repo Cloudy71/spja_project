@@ -129,7 +129,7 @@ function sendThumb(element, postId, type) {
     });*/
 }
 
-function sendComment(postId, area) {
+function sendComment(postId, area, callBack) {
     $.ajax({
         url: "/response",
         method: "POST",
@@ -138,8 +138,9 @@ function sendComment(postId, area) {
             main_post: Number(postId),
         },
         datatype: "json"
-    }).done(() => {
+    }).done((data) => {
         area.value = "";
+        callBack(JSON.parse(data));
     });
 }
 
@@ -200,7 +201,7 @@ function createComments(postId, posts) {
     area.className = "response";
     area.value = "Write your response.";
     area.setAttribute("unused", "true");
-    responses.appendChild(area);
+    post.appendChild(area);
     responses.className = "messages";
     createCommentList(posts).forEach(r => responses.appendChild(r));
 
@@ -211,8 +212,19 @@ function createComments(postId, posts) {
         }
     });
     area.addEventListener("keydown", evt => {
+        var content = area.value;
         if (evt.which === 13) {
-            sendComment(postId, area);
+            sendComment(postId, area, data => {
+                responses.insertBefore(createComment({
+                    login: data.login,
+                    content: content,
+                    author: data.name,
+                    thumb_downs: [0, 0],
+                    thumb_ups: [0, 0]
+                }
+
+            
+            ), responses.firstChild)});
         }
     });
     post.appendChild(responses);

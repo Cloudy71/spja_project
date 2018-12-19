@@ -173,7 +173,7 @@ def response(request):
                 author=get_object_or_404(Profile, user=request.user),
                 content=form.cleaned_data["content"]
             )
-            return HttpResponse("OK")
+            return HttpResponse(dumps({"login": request.user.username, "name": request.user.get_full_name()}))
     return HttpResponse("NO :(")
 
 
@@ -202,3 +202,4 @@ def change_visibility(request):
             post.save()
             return HttpResponse("1")
     return HttpResponse("0")
+
