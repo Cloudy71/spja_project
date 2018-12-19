@@ -1,6 +1,6 @@
-import logging
 import re
 from html import escape
+
 from django import template
 
 from website.libs.model_utils import is_user_followed_by, get_profile_by_user
@@ -53,3 +53,9 @@ def get_following(profile):
     from website.models import Follow
     profile = get_profile_by_user(profile)
     return len(Follow.objects.filter(follower=profile))
+
+
+@register.filter(name="get_profile_picture")
+def get_profile_picture(user):
+    user = get_profile_by_user(user)
+    return user.picture_url if user.picture_url is not None else "/static/images/default_picture.png"

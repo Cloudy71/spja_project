@@ -1,13 +1,14 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 from website.libs.const import Visibility, Thumb
-from website.libs.model_utils import get_profile_by_user, is_user_followed_by
+from website.libs.model_utils import get_profile_by_user
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=140, default="")
+    picture_url = models.CharField(max_length=256, default=None, blank=True, null=True)
 
 
 class Post(models.Model):

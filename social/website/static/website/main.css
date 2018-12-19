@@ -115,6 +115,8 @@ body {
     display: inline-block;
     vertical-align: top;
     margin-right: 4px;
+    background-size: 32px 32px;
+    cursor: pointer;
 }
 
 .post .messages {
@@ -314,4 +316,27 @@ table {
 
 table input {
     border: 1px solid #BBBBBB;
+}
+
+#blackscreen {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+}
+
+#showpicture {
+    position: absolute;
+    left: calc(50% - 256px);
+    top: calc(50% - 256px);
+    width: 512px;
+    height: 512px;
+}
+
+#showpicture img {
+    width: 100%;
+    height: 100%;
 }

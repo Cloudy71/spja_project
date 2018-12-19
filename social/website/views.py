@@ -1,22 +1,21 @@
-from django.db.models import Case, When, Q, IntegerField
-from django.shortcuts import render, get_object_or_404, redirect
+from json import dumps
 
-from django.http import HttpResponse, JsonResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db.models import Q
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
 
 from website.forms import ThumbForm, FollowForm, VisibilityForm, ChangeName, ChangePassword
 from website.libs.const import Thumb, Visibility
-from website.libs.model_utils import is_user_followed_by, get_profile_by_user, post_exists, profile_exists_by_username, \
+from website.libs.model_utils import get_profile_by_user, post_exists, profile_exists_by_username, \
     reaction_exist, reaction_exist_value, follow_exist
-from website.models import Reaction
 from website.libs.views_utils import get_hashtags
-
-from .models import Profile, Post, Follow, Tag
-from django.contrib.auth.decorators import login_required
+from website.models import Reaction
+from website.templatetags.timeline import get_profile_picture
 from .forms import UserForm, LoginForm, ResponseForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from django.core import serializers
-from json import dumps
+from .models import Profile, Post, Follow, Tag
 
 
 def index(request):
@@ -173,7 +172,7 @@ def response(request):
                 author=get_object_or_404(Profile, user=request.user),
                 content=form.cleaned_data["content"]
             )
-            return HttpResponse(dumps({"login": request.user.username, "name": request.user.get_full_name()}))
+            return HttpResponse(dumps({"login": request.user.username, "name": request.user.get_full_name(), "picture_url": get_profile_picture(request.user)}))
     return HttpResponse("NO :(")
 
 
@@ -181,6 +180,7 @@ def get_responses(request, post):
     posts = Post.objects.filter(main_post=get_object_or_404(Post, id=post)).select_related().order_by('-date')
     posts_dict = [
         {"id": x.id, "content": x.content, "author": x.author.user.get_full_name(), "login": x.author.user.username,
+         "picture_url": get_profile_picture(x.author),
          "thumb_ups": [len(Reaction.objects.filter(post=x, value=Thumb.UP)),
                        reaction_exist_value(x, request.user, Thumb.UP)],
          "thumb_downs": [len(Reaction.objects.filter(post=x, value=Thumb.DOWN)),
@@ -213,6 +213,7 @@ def settings(request):
     }
     return render(request, 'website/settings.html', ctx)
 
+
 @login_required
 def change_name(request):
     if request.POST:
@@ -222,6 +223,7 @@ def change_name(request):
             request.user.last_name = form.cleaned_data["new_surname"]
             request.user.save()
     return redirect("/profile/" + request.user.username)
+
 
 @login_required
 def change_password(request):

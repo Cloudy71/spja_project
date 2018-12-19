@@ -175,6 +175,11 @@ function createComment(post) {
     response.className = "comment";
     picture.style.width = "24px";
     picture.style.height = "24px";
+    picture.style.backgroundSize = "24px 24px";
+    picture.style.backgroundImage = "url('"+post.picture_url+"')";
+    picture.onclick = ev => {
+        showPicture(post.picture_url);
+    };
     reactions.className = "reactions_mini";
     response.appendChild(picture);
     response.appendChild(user);
@@ -220,11 +225,12 @@ function createComments(postId, posts) {
                     content: content,
                     author: data.name,
                     thumb_downs: [0, 0],
-                    thumb_ups: [0, 0]
+                    thumb_ups: [0, 0],
+                    picture_url: data.picture_url
                 }
-
-            
-            ), responses.firstChild)});
+            ), responses.firstChild)
+            responses.parentNode.getElementsByClassName("reactions")[0].getElementsByClassName("button")[2].getElementsByTagName("LABEL")[0].innerText = responses.getElementsByClassName("comment").length;
+            });
         }
     });
     post.appendChild(responses);
@@ -283,4 +289,10 @@ function setVisibility(postId, visibility) {
         let btn = post.getElementsByClassName("menu");
         btn[1].getElementsByTagName("IMG")[0].src = visibility == 0 ? img_public : (visibility == 1 ? img_followers : img_private);
     });
+}
+
+function showPicture(url) {
+    document.getElementById("blackscreen").style.display = "inline-block";
+    document.getElementById("showpicture").style.display = "inline-block";
+    document.getElementById("showpicture").getElementsByTagName("IMG")[0].src = url;
 }
